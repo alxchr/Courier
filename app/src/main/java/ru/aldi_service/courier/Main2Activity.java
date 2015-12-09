@@ -53,22 +53,22 @@ public class Main2Activity extends AppCompatActivity {
 
         @Override
         public View createTabContent(String tag) {
-            if (tag.equals("tag1")) {
+            if (tag.equals(getString(R.string.text_tab1))) {
                 WaybillAdapter wAdapter = new WaybillAdapter(Main2Activity.this, prepared);
                 lvPrepared.setAdapter(wAdapter);
                 return lvPrepared;
 
-            } else if (tag.equals("tag2")) {
+            } else if (tag.equals(getString(R.string.text_tab2))) {
                 WaybillAdapter sAdapter = new WaybillAdapter(Main2Activity.this, in_work);
                 lvInWork.setAdapter(sAdapter);
                 return lvInWork;
 
-            } else if (tag.equals("tag3")) {
+            } else if (tag.equals(getString(R.string.text_tab3))) {
                 WaybillAdapter sAdapter = new WaybillAdapter(Main2Activity.this, done);
                 lvDone.setAdapter(sAdapter);
                 return lvDone;
 
-            } else if (tag.equals("tag4")) {
+            } else if (tag.equals(getString(R.string.text_tab4))) {
                 WaybillAdapter sAdapter = new WaybillAdapter(Main2Activity.this, problems);
                 lvProblems.setAdapter(sAdapter);
                 return lvProblems;
@@ -193,22 +193,22 @@ public class Main2Activity extends AppCompatActivity {
             tabHost.clearAllTabs();
 
             TabHost.TabSpec tabSpec;
-            tabSpec = tabHost.newTabSpec("tag1");
+            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab1));
             tabSpec.setContent(TabFactory);
             tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_prepared));
             tabHost.addTab(tabSpec);
 
-            tabSpec = tabHost.newTabSpec("tag2");
+            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab2));
             tabSpec.setContent(TabFactory);
             tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_in_work));
             tabHost.addTab(tabSpec);
 
-            tabSpec = tabHost.newTabSpec("tag3");
+            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab3));
             tabSpec.setContent(TabFactory);
             tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_done));
             tabHost.addTab(tabSpec);
 
-            tabSpec = tabHost.newTabSpec("tag4");
+            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab4));
             tabSpec.setContent(TabFactory);
             tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_problem));
             tabHost.addTab(tabSpec);
@@ -292,31 +292,31 @@ public class Main2Activity extends AppCompatActivity {
 
         tabHost.setup();
         TabHost.TabSpec tabSpec;
-        tabSpec = tabHost.newTabSpec("tag1");
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab1));
         tabSpec.setContent(TabFactory);
         tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_prepared));
         tabHost.addTab(tabSpec);
 
-        tabSpec = tabHost.newTabSpec("tag2");
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab2));
         tabSpec.setContent(TabFactory);
         tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_in_work));
         tabHost.addTab(tabSpec);
 
-        tabSpec = tabHost.newTabSpec("tag3");
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab3));
         tabSpec.setContent(TabFactory);
         tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_done));
         tabHost.addTab(tabSpec);
 
-        tabSpec = tabHost.newTabSpec("tag4");
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab4));
         tabSpec.setContent(TabFactory);
         tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_problem));
         tabHost.addTab(tabSpec);
 
-//        tabHost.setCurrentTabByTag("tag1");
+        tabHost.setCurrentTabByTag(getString(R.string.text_tab2));
 
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             public void onTabChanged(String tabId) {
-                Toast.makeText(getBaseContext(), "tabId = " + tabId, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), tabId, Toast.LENGTH_SHORT).show();
             }
         });
     }

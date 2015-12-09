@@ -20,10 +20,10 @@
     <string name="database_user">cargo</string>
     <string name="database_password">cargo3</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="text_tab1">подготовлено</string>
-    <string name="text_tab2">в работе</string>
-    <string name="text_tab3">доставлено</string>
-    <string name="text_tab4">проблемы</string>
+    <string name="text_tab1">Подготовлено</string>
+    <string name="text_tab2">В работе</string>
+    <string name="text_tab3">Доставлено</string>
+    <string name="text_tab4">Проблемы</string>
     <string name="text_tab"></string>
     <string-array name="urgencies">
         <item></item>
