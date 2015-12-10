@@ -1,6 +1,7 @@
 package ru.aldi_service.courier;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
@@ -85,10 +86,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 int imageFormat = parameters.getPreviewFormat();
                 int bufferSize = previewSize.width * previewSize.height * ImageFormat.getBitsPerPixel(imageFormat) / 8;
                 cameraBuffer = new byte[bufferSize];
-
-                // Hard code camera surface rotation 90 degs to match Activity view in portrait
-                mCamera.setDisplayOrientation(90);
-
+                if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    mCamera.setDisplayOrientation(0);
+                } else {
+                    mCamera.setDisplayOrientation(90);
+                }
                 mCamera.setPreviewDisplay(mHolder);
                 mCamera.setPreviewCallbackWithBuffer(null);
                 mCamera.setPreviewCallbackWithBuffer(previewCallback);

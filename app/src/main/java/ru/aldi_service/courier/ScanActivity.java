@@ -2,7 +2,6 @@ package ru.aldi_service.courier;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -135,7 +134,7 @@ public class ScanActivity extends Activity {
 
         setContentView(R.layout.scan_layout);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         autoFocusHandler = new Handler();
 
@@ -162,7 +161,6 @@ public class ScanActivity extends Activity {
     protected void onResume() {
         super.onResume();
         resumeCamera();
-//        generateCodeImage(code_for_bar.getText().toString());
     }
 
     public void onPause() {
