@@ -82,9 +82,7 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int id, oldstatus, newstatus, j;
-        Waybill wdel = null;
-        boolean inserted;
+        int id, oldstatus, newstatus;
         String currentTag;
         String LOG_TAG = "Waybill result =";
         if (resultCode == RESULT_OK) {
@@ -94,100 +92,22 @@ public class Main2Activity extends AppCompatActivity {
             newstatus = data.getIntExtra("newstatus", 0);
             Log.d(LOG_TAG, resultCode + " request = " + requestCode + " id = " + id + " old = " + oldstatus + " new = " + newstatus);
             if (oldstatus == 1 && newstatus == 2) {
-                for (Waybill w : prepared) {
-                    j = w.getId();
-                    if (j == id) {
-                        inserted = false;
-                        for (Waybill w1 : in_work) {
-                            int i = in_work.indexOf(w1);
-                            if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
-                                in_work.add(i, w);
-                                inserted = true;
-                                break;
-                            }
-                        }
-                        if (!inserted) {
-                            in_work.add(w);
-                        }
-                        wdel = w;
-                        break;
-                    }
-                }
-                if (wdel != null) {
-                    prepared.remove(wdel);
-                }
+                wbTransfer(id, prepared, in_work);
             }
             if (oldstatus == 1 && newstatus == 4) {
-                for (Waybill w : prepared) {
-                    j = w.getId();
-                    if (j == id) {
-                        inserted = false;
-                        for (Waybill w1 : problems) {
-                            int i = problems.indexOf(w1);
-                            if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
-                                problems.add(i, w);
-                                inserted = true;
-                                break;
-                            }
-                        }
-                        if (!inserted) {
-                            problems.add(w);
-                        }
-                        wdel = w;
-                        break;
-                    }
-                }
-                if (wdel != null) {
-                    prepared.remove(wdel);
-                }
+                wbTransfer(id, prepared, problems);
             }
-            if (oldstatus == 4 && newstatus == 2) {
-                for (Waybill w : problems) {
-                    j = w.getId();
-                    if (j == id) {
-                        inserted = false;
-                        for (Waybill w1 : in_work) {
-                            int i = in_work.indexOf(w1);
-                            if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
-                                in_work.add(i, w);
-                                inserted = true;
-                                break;
-                            }
-                        }
-                        if (!inserted) {
-                            in_work.add(w);
-                        }
-                        wdel = w;
-                        break;
-                    }
-                }
-                if (wdel != null) {
-                    problems.remove(wdel);
-                }
+            if (oldstatus == 2 && newstatus == 3) {
+                wbTransfer(id, in_work, done);
             }
             if (oldstatus == 2 && newstatus == 4) {
-                for (Waybill w : in_work) {
-                    j = w.getId();
-                    if (j == id) {
-                        inserted = false;
-                        for (Waybill w1 : problems) {
-                            int i = problems.indexOf(w1);
-                            if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
-                                problems.add(i, w);
-                                inserted = true;
-                                break;
-                            }
-                        }
-                        if (!inserted) {
-                            problems.add(w);
-                        }
-                        wdel = w;
-                        break;
-                    }
-                }
-                if (wdel != null) {
-                    in_work.remove(wdel);
-                }
+                wbTransfer(id, in_work, problems);
+            }
+            if (oldstatus == 4 && newstatus == 2) {
+                wbTransfer(id, problems, in_work);
+            }
+            if (oldstatus == 4 && newstatus == 3) {
+                wbTransfer(id, problems, done);
             }
 
             tabHost.clearAllTabs();
@@ -218,7 +138,6 @@ public class Main2Activity extends AppCompatActivity {
 
     }
 
-    //    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -321,6 +240,35 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
+    boolean wbTransfer(int id, ArrayList<Waybill> from, ArrayList<Waybill> to) {
+        int j;
+        boolean inserted;
+        Waybill wdel = null;
+        for (Waybill w : from) {
+            j = w.getId();
+            if (j == id) {
+                inserted = false;
+                for (Waybill w1 : to) {
+                    int i = to.indexOf(w1);
+                    if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
+                        to.add(i, w);
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted) {
+                    to.add(w);
+                }
+                wdel = w;
+                break;
+            }
+        }
+        if (wdel != null) {
+            from.remove(wdel);
+            return true;
+        }
+        return false;
+    }
 
     public class exchangeDB extends AsyncTask<Void, Void, Boolean> {
         private final int PREPARED = 1;
