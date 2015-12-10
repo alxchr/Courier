@@ -17,7 +17,7 @@ import android.widget.Toast;
 public class WaybillActivity extends Activity {
     DBHelper dbHelper;
     TextView tvWaybill, tvAddressee, tvGeography, tvAddress, tvPhone, tvInfo, tvComment, tvItems;
-    RadioButton rbAccept, rbDecline;
+    RadioButton rbAccept, rbDecline, rbDone;
     Button execute;
     ContentValues cv;
     String waybill, addressee, address, cp, geo, phone, accepted, info, comment, dd;
@@ -28,16 +28,21 @@ public class WaybillActivity extends Activity {
     View.OnClickListener ocl = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            Intent intent;
             switch (v.getId()) {
                 case R.id.rbAccept:
                     newstatus = 2;
+                    break;
+                case R.id.rbDone:
+                    newstatus = 3;
+                    intent = new Intent(WaybillActivity.this,Sign.class);
+                    startActivity(intent);
                     break;
                 case R.id.rbDecline:
                     newstatus = 4;
                     break;
                 case R.id.bExecute:
-                    Intent intent = new Intent();
+                    intent = new Intent();
                     intent.putExtra("id", id);
                     if (newstatus > 0 && newstatus != status) {
                         cv = new ContentValues();
@@ -151,9 +156,11 @@ public class WaybillActivity extends Activity {
         }
         rbAccept = (RadioButton) findViewById(R.id.rbAccept);
         rbDecline = (RadioButton) findViewById(R.id.rbDecline);
+        rbDone = (RadioButton) findViewById(R.id.rbDone);
         execute = (Button) findViewById(R.id.bExecute);
         execute.setOnClickListener(ocl);
         rbAccept.setOnClickListener(ocl);
+        rbDone.setOnClickListener(ocl);
         rbDecline.setOnClickListener(ocl);
     }
 }

@@ -13,6 +13,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,14 +29,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WaybillActivity"></activity>
+        <activity android:name=".WaybillActivity" />
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ScanActivity"
             android:label="@string/title_activity_scan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Sign"
+            android:label="@string/title_activity_sign"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
