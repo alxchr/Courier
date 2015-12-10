@@ -39,4 +39,8 @@
         <item>сверхсрочный</item>
         <item>АЛДИ-Экспресс 10-00</item>
     </string-array>
+    <string name="scan_process_label">Scanning…</string>
+    <string name="scan_label">Scan</string>
+    <string name="scan_result_label">Last scan result: </string>
+    <string name="title_activity_scan">Scan Activity</string>
 </resources>

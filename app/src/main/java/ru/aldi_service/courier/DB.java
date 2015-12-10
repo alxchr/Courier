@@ -161,4 +161,9 @@ public class DB {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
     }
+
+    /**
+     * A basic Camera preview class
+     */
+
 }

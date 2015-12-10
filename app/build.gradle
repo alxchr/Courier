@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
     compile files('libs/postgresql-9.4-1204.jdbc4.jar')
+    compile files('libs/zbar.jar')
+    compile files('libs/zxing_core.jar')
 }

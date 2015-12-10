@@ -85,7 +85,7 @@ public class Main2Activity extends AppCompatActivity {
         int id, oldstatus, newstatus;
         String currentTag;
         String LOG_TAG = "Waybill result =";
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == 1) {
             id = data.getIntExtra("id", 0);
             currentTag = tabHost.getCurrentTabTag();
             oldstatus = data.getIntExtra("oldstatus", 0);
@@ -134,6 +134,14 @@ public class Main2Activity extends AppCompatActivity {
             tabHost.addTab(tabSpec);
 
             tabHost.setCurrentTabByTag(currentTag);
+        }
+        ;
+        if (resultCode == RESULT_OK && requestCode == 2) {
+            ArrayList<String> result = data.getStringArrayListExtra("result");
+            int n = result.size();
+            String[] res = new String[n];
+            res = result.toArray(res);
+            Log.d("Scan result", n + " items, " + res[0]);
         }
 
     }
@@ -200,6 +208,9 @@ public class Main2Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent intent = new Intent(Main2Activity.this, ScanActivity.class);
+                intent.putExtra("mode", 0);
+                startActivityForResult(intent, 2);
             }
         });
         setTitle(getEmployeeName());
@@ -278,9 +289,7 @@ public class Main2Activity extends AppCompatActivity {
         private Date now;
 
         exchangeDB() {
-
         }
-
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
