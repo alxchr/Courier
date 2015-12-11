@@ -121,7 +121,7 @@ public class Main2Activity extends AppCompatActivity {
             int n = result.size();
             String[] res = new String[n];
             res = result.toArray(res);
-            Log.d("Scan result", n + " items, " + res[0]);
+            Log.d("Scan result", n + " items");
         }
 
     }
@@ -183,7 +183,9 @@ public class Main2Activity extends AppCompatActivity {
                 } while (c1.moveToNext());
             }
             selection = "delivery_list_id IN (" + lists + ")";
-            c2 = db.query("deliveries", null, selection, null, null, null, "urgency desc, delivery_date asc");
+//            c2 = db.query("deliveries", null, selection, null, null, null, "urgency desc, delivery_date asc");
+            // use distinct for waybills
+            c2 = db.query(true, "deliveries", null, selection, null, "waybill", null, "urgency desc, delivery_date asc", null);
             Log.d("deliveries", "deliveries num = " + String.valueOf(c2.getCount()));
             if (c2 != null && c2.getCount() > 0) {
                 if (c2.moveToFirst()) {
@@ -383,7 +385,7 @@ public class Main2Activity extends AppCompatActivity {
                             Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                         } catch (SQLiteConstraintException e) {
 //                            long rowID = db.replace("deliveries", null, cv);
-//                            Log.d(LOG_TAG, "row replaced, ID = " + rowID);
+                            Log.d(LOG_TAG, "Unique constraint, ID = " + result2.getInt("id") + " waybill = " + result2.getString("waybill"));
                         }
                         i++;
                     }
