@@ -36,6 +36,7 @@ public class Main2Activity extends AppCompatActivity {
     static SQLiteDatabase db;
     static Cursor c1, c2;
     static String selection;
+    String currentTag;
     DBHelper dbHelper;
     TabHost tabHost;
     String[] columnsDeliveries = {"waybill", "addressee", "contact_person",
@@ -83,11 +84,11 @@ public class Main2Activity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         int id, oldstatus, newstatus;
-        String currentTag;
+
         String LOG_TAG = "Waybill result =";
         if (resultCode == RESULT_OK && requestCode == 1) {
             id = data.getIntExtra("id", 0);
-            currentTag = tabHost.getCurrentTabTag();
+
             oldstatus = data.getIntExtra("oldstatus", 0);
             newstatus = data.getIntExtra("newstatus", 0);
             Log.d(LOG_TAG, resultCode + " request = " + requestCode + " id = " + id + " old = " + oldstatus + " new = " + newstatus);
@@ -109,31 +110,10 @@ public class Main2Activity extends AppCompatActivity {
             if (oldstatus == 4 && newstatus == 3) {
                 wbTransfer(id, problems, done);
             }
+            currentTag = tabHost.getCurrentTabTag();
 
             tabHost.clearAllTabs();
-
-            TabHost.TabSpec tabSpec;
-            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab1));
-            tabSpec.setContent(TabFactory);
-            tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_prepared));
-            tabHost.addTab(tabSpec);
-
-            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab2));
-            tabSpec.setContent(TabFactory);
-            tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_in_work));
-            tabHost.addTab(tabSpec);
-
-            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab3));
-            tabSpec.setContent(TabFactory);
-            tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_done));
-            tabHost.addTab(tabSpec);
-
-            tabSpec = tabHost.newTabSpec(getString(R.string.text_tab4));
-            tabSpec.setContent(TabFactory);
-            tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_problem));
-            tabHost.addTab(tabSpec);
-
-            tabHost.setCurrentTabByTag(currentTag);
+            fillTabs(currentTag);
         }
         ;
         if (resultCode == RESULT_OK && requestCode == 2) {
@@ -156,6 +136,38 @@ public class Main2Activity extends AppCompatActivity {
         db = dbHelper.getWritableDatabase();
         exchangeDBTask = new exchangeDB();
         exchangeDBTask.execute((Void) null);
+
+        getDataDB();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                Intent intent = new Intent(Main2Activity.this, ScanActivity.class);
+                intent.putExtra("mode", 0);
+                startActivityForResult(intent, 2);
+            }
+        });
+        setTitle(getEmployeeName());
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        lvPrepared = new ListView(this);
+        lvInWork = new ListView(this);
+        lvDone = new ListView(this);
+        lvProblems = new ListView(this);
+
+        tabHost.setup();
+        fillTabs(getString(R.string.text_tab2));
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            public void onTabChanged(String tabId) {
+                Toast.makeText(getBaseContext(), tabId, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void getDataDB() {
 
         selection = "employee_id = ";
         c1 = db.query("delivery_lists", null, selection + "'" + String.valueOf(getEmployee()) + "'", null, null, null, null);
@@ -197,58 +209,10 @@ public class Main2Activity extends AppCompatActivity {
                                 problems.add(new Waybill(this, id, w, adrs, adr, u, dd));
                                 break;
                         }
-
                     } while (c2.moveToNext());
                 }
             }
         }
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(Main2Activity.this, ScanActivity.class);
-                intent.putExtra("mode", 0);
-                startActivityForResult(intent, 2);
-            }
-        });
-        setTitle(getEmployeeName());
-        tabHost = (TabHost) findViewById(android.R.id.tabhost);
-        lvPrepared = new ListView(this);
-        lvInWork = new ListView(this);
-        lvDone = new ListView(this);
-        lvProblems = new ListView(this);
-
-        tabHost.setup();
-        TabHost.TabSpec tabSpec;
-        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab1));
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_prepared));
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab2));
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_in_work));
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab3));
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_done));
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab4));
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_problem));
-        tabHost.addTab(tabSpec);
-
-        tabHost.setCurrentTabByTag(getString(R.string.text_tab2));
-
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            public void onTabChanged(String tabId) {
-                Toast.makeText(getBaseContext(), tabId, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     boolean wbTransfer(int id, ArrayList<Waybill> from, ArrayList<Waybill> to) {
@@ -281,15 +245,56 @@ public class Main2Activity extends AppCompatActivity {
         return false;
     }
 
+    void fillTabs(String cTab) {
+
+        TabHost.TabSpec tabSpec;
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab1));
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_prepared));
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab2));
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_in_work));
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab3));
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_done));
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec(getString(R.string.text_tab4));
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator("", ContextCompat.getDrawable(this, R.drawable.ic_tab_problem));
+        tabHost.addTab(tabSpec);
+
+        tabHost.setCurrentTabByTag(cTab);
+    }
+
     public class exchangeDB extends AsyncTask<Void, Void, Boolean> {
         private final int PREPARED = 1;
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         private Connection connection;
         private String from, to;
         private Date now;
-
         exchangeDB() {
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean res) {
+            super.onPostExecute(res);
+            Log.d("Exchange DB", "Done res = " + res);
+            getDataDB();
+            tabHost.clearAllTabs();
+            fillTabs(currentTag);
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
