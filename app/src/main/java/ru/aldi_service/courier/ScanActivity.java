@@ -57,6 +57,7 @@ public class ScanActivity extends Activity {
                     lastScannedCode = sym.getData();
                     if (lastScannedCode != null) {
                         scanText.setText(getString(R.string.scan_result_label) + lastScannedCode);
+                        releaseCamera();
                         boolean d = false;
                         for (String code : resArray) {
                             if (code.equals(lastScannedCode)) {
@@ -92,6 +93,9 @@ public class ScanActivity extends Activity {
                     scanned.setText("");
                     resArray.clear();
                     break;
+                case R.id.buttonStart:
+                    resumeCamera();
+                    break;
                 case R.id.buttonStop:
                     Intent intent = new Intent();
                     intent.putExtra("result", resArray);
@@ -101,7 +105,7 @@ public class ScanActivity extends Activity {
             }
         }
     };
-    private Button buttonStop, buttonReset;
+    private Button buttonStart, buttonStop, buttonReset;
     private Runnable doAutoFocus = new Runnable() {
         public void run() {
             if (previewing && mCamera != null) {
@@ -151,18 +155,21 @@ public class ScanActivity extends Activity {
         mode = intent.getIntExtra("mode", 1);
         scanned = (EditText) findViewById(R.id.scannedText);
         buttonReset = (Button) findViewById(R.id.buttonReset);
+        buttonStart = (Button) findViewById(R.id.buttonStart);
         buttonStop = (Button) findViewById(R.id.buttonStop);
         buttonReset.setOnClickListener(ocl);
+        buttonStart.setOnClickListener(ocl);
         buttonStop.setOnClickListener(ocl);
         resArray = new ArrayList<>();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        resumeCamera();
-    }
-
+    /*
+        @Override
+        protected void onResume() {
+            super.onResume();
+            resumeCamera();
+        }
+    */
     public void onPause() {
         super.onPause();
         releaseCamera();
