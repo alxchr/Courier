@@ -57,4 +57,8 @@
     <string name="done">Done</string>
     <string name="execute">Execute</string>
     <string name="text_tab1">Prepared</string>
+    <string name="sign">Sign</string>
+    <string name="clear">Clear</string>
+    <string name="cancel">Cancel</string>
+    <string name="put_sign">Put your sign here, please!</string>
 </resources>

@@ -4,7 +4,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Пароль</string>
     <string name="action_sign_in">Войти</string>
     <string name="action_sign_in_short">Войти</string>
     <string name="error_invalid_email">Неправильный адрес</string>
@@ -46,7 +46,11 @@
     <string name="items">Грузовые места</string>
     <string name="accepted">Принял</string>
     <string name="decline">Отклонить</string>
-    <string name="done">Выполнено</string>
+    <string name="done">Доставлено</string>
     <string name="execute">Выполнить</string>
     <string name="accept">Принять</string>
+    <string name="clear">Стереть</string>
+    <string name="cancel">Отменить</string>
+    <string name="put_sign">Пожалуйста, подпишите документ.</string>
+    <string name="sign">Подписать</string>
 </resources>
