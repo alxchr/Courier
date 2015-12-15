@@ -16,11 +16,12 @@ import android.widget.Toast;
 
 public class WaybillActivity extends Activity {
     DBHelper dbHelper;
-    TextView tvWaybill, tvAddressee, tvGeography, tvAddress, tvPhone, tvInfo, tvComment, tvItems;
+    TextView tvWaybill, tvAddressee, tvGeography, tvAddress, tvPhone, tvInfo, tvComment, tvItems, tvAccepted;
     RadioButton rbAccept, rbDecline, rbDone;
     Button execute;
     ContentValues cv;
     String waybill, addressee, address, cp, geo, phone, accepted, info, comment, dd;
+    byte[] sign = {0};
     private int i, newstatus = 0, status, dli, nItems, urgency, id;
     private float weight, cod, addpay, addrpay;
     private String sId, sItems = "";
@@ -36,7 +37,7 @@ public class WaybillActivity extends Activity {
                 case R.id.rbDone:
                     newstatus = 3;
                     intent = new Intent(WaybillActivity.this,Sign.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                     break;
                 case R.id.rbDecline:
                     newstatus = 4;
@@ -65,6 +66,10 @@ public class WaybillActivity extends Activity {
                         cv.put("comment", comment);
                         cv.put("delivery_date", dd);
                         cv.put("status", newstatus);
+                        if (sign.length > 1) {
+                            Log.d("Sign accepted", "length = " + sign.length);
+                            cv.put("sign", sign);
+                        }
                         try {
                             long rowID = db.replaceOrThrow("deliveries", null, cv);
                             Log.d("New status = ", newstatus + " row ID = " + rowID);
@@ -93,6 +98,15 @@ public class WaybillActivity extends Activity {
     private String[] columns = {"item_number"};
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            sign = data.getByteArrayExtra("sign");
+            accepted = data.getStringExtra("accepted");
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waybill);
@@ -111,6 +125,7 @@ public class WaybillActivity extends Activity {
         tvPhone = (TextView) findViewById(R.id.phone);
         tvComment = (TextView) findViewById(R.id.comment);
         tvItems = (TextView) findViewById(R.id.items);
+        tvAccepted = (TextView) findViewById(R.id.accepted);
         c1.moveToFirst();
         waybill = c1.getString(c1.getColumnIndex("waybill"));
         tvWaybill.setText(waybill);
@@ -131,6 +146,7 @@ public class WaybillActivity extends Activity {
         addpay = c1.getFloat(c1.getColumnIndex("additional_payment"));
         weight = c1.getFloat(c1.getColumnIndex("weight"));
         accepted = c1.getString(c1.getColumnIndex("accepted_by"));
+        tvAccepted.setText(accepted);
         cp = c1.getString(c1.getColumnIndex("contact_person"));
         dd = c1.getString(c1.getColumnIndex("delivery_date"));
         status = c1.getInt(c1.getColumnIndex("status"));

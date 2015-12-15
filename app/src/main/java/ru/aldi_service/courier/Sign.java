@@ -1,20 +1,19 @@
 package ru.aldi_service.courier;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -25,15 +24,16 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
     Paint mPaint;
     Button btnOk,btnCancel,btnClear;
     LinearLayout linLayout;
-    MyView signView;
+    SignView signView;
     ByteArrayOutputStream signOS;
-    //    ViewGroup.LayoutParams lp;
+    Intent intent;
+    EditText edAccepted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        signView  = new MyView(this);
-//        signView = myView;
+        signView = new SignView(this);
         linLayout=(LinearLayout) findViewById(R.id.linLayout);
         linLayout.addView(signView);
 
@@ -53,7 +53,7 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         // mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(1);
-
+        edAccepted = (EditText) findViewById(R.id.accepted);
     }
     @Override
     public void onClick(View v) {
@@ -61,36 +61,45 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button:
                 // кнопка ОК
-                Log.d("Button", "Ok");
-//                tvOut.setText("Нажата кнопка ОК");
                 signOS=signView.write();
+                byte[] sign = signOS.toByteArray();
                 Log.d ("Button-Ok","Size = "+String.valueOf(signOS.size()));
+                intent = new Intent();
+                intent.putExtra("sign", sign);
+                intent.putExtra("accepted", edAccepted.getText().toString());
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.button2:
                 // кнопка Clear
                 Log.d("Button", "Clear");
                 signView.clear();
-//                tvOut.setText("Нажата кнопка Cancel");
                 break;
             case R.id.button3:
                 // кнопка Cancel
                 Log.d ("Button","Cancel");
+                intent = new Intent();
+                byte[] sign0 = {0};
+                intent.putExtra("result", sign0);
+                setResult(RESULT_CANCELED, intent);
                 finish();
-//                tvOut.setText("Нажата кнопка Cancel");
                 break;
         }
     }
-    public class MyView extends View {
+
+    public class SignView extends View {
 
         private static final float MINP = 0.25f;
         private static final float MAXP = 0.75f;
-
+        private static final float TOUCH_TOLERANCE = 1;
         private Bitmap mBitmap;
         private Canvas mCanvas;
         private Path mPath;
         private Paint   mBitmapPaint;
         private int wSign,hSign;
-        public MyView(Context c) {
+        private float mX, mY;
+
+        public SignView(Context c) {
             super(c);
 
             mPath = new Path();
@@ -103,8 +112,8 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_4444);
             mCanvas = new Canvas(mBitmap);
             //        mCanvas.setBitmap(mBitmap);
-            wSign=w;
-            hSign=h;
+            wSign = w;
+            hSign = h;
         }
 
         @Override
@@ -114,11 +123,7 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
             //canvas.drawLine(mX, mY, x, y, mPaint);
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
             canvas.drawPath(mPath, mPaint);
-
         }
-
-        private float mX, mY;
-        private static final float TOUCH_TOLERANCE = 1;
 
         private void touch_start(float x, float y) {
             mPath.reset();
@@ -175,19 +180,12 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
             invalidate();
         }
         public ByteArrayOutputStream write() {
-//            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "savedBitmap.png");
             ByteArrayOutputStream result=null;
-//            FileOutputStream fos = null;
             try {
                 result=new ByteArrayOutputStream();
-//                fos = new FileOutputStream(file);
                 Log.d("Bitmap","Size = "+String.valueOf(mBitmap.getByteCount()));
-//                mBitmap.copyPixelsFromBuffer();
                 mBitmap.compress(Bitmap.CompressFormat.PNG,100,result);
-//                mBitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
-//                fos.close();
                 result.close();
-//                Log.d("Compress", "Size = " + String.valueOf(result.size()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

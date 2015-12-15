@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Waybill" />
+            android:text="@string/waybill" />
 
         <TextView
             android:id="@+id/waybill_number"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Addressee" />
+            android:text="@string/addressee" />
 
         <TextView
             android:id="@+id/addressee"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Geography" />
+            android:text="@string/geography" />
 
         <TextView
             android:id="@+id/geography"
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Address" />
+            android:text="@string/address" />
 
         <TextView
             android:id="@+id/address"
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Phone" />
+            android:text="@string/phone" />
 
         <TextView
             android:id="@+id/phone"
@@ -109,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Info" />
+            android:text="@string/info" />
 
         <TextView
             android:id="@+id/info"
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Comment" />
+            android:text="@string/comment" />
 
         <TextView
             android:id="@+id/comment"
@@ -145,10 +145,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="Items" />
+            android:text="@string/items" />
 
         <TextView
             android:id="@+id/items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/accepted" />
+
+        <TextView
+            android:id="@+id/accepted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -167,19 +185,19 @@
                 android:id="@+id/rbAccept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accept" />
+                android:text="@string/accept" />
 
             <RadioButton
                 android:id="@+id/rbDecline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Decline" />
+                android:text="@string/decline" />
 
             <RadioButton
                 android:id="@+id/rbDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Done" />
+                android:text="@string/done" />
         </RadioGroup>
 
         <Button
@@ -188,7 +206,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Execute" />
+            android:text="@string/execute" />
+
     </LinearLayout>
 
 

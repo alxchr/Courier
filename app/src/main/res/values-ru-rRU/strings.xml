@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Курьер</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="error_invalid_email">Неправильный адрес</string>
+    <string name="error_invalid_password">Короткий пароль</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Обязательное значение</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="text_tab1">Подготовлено</string>
+    <string name="text_tab2">В работе</string>
+    <string name="text_tab3">Доставлено</string>
+    <string name="text_tab4">Проблемы</string>
+    <string-array name="urgencies">
+        <item></item>
+        <item>Простое письмо</item>
+        <item>Заказное письмо с уведомлением разряда "Судебное"</item>
+        <item>Заказное письмо с уведомлением</item>
+        <item>Заказное письмо</item>
+        <item>Заказная бандероль с уведомлением от 100 гр.</item>
+        <item>срочный/C/</item>
+        <item>срочный/Е/</item>
+        <item>АЛДИ-Экспресс 18-00</item>
+        <item>АЛДИ-Экспресс 12-00</item>
+        <item>сверхсрочный</item>
+        <item>АЛДИ-Экспресс 10-00</item>
+    </string-array>
+    <string name="scan_process_label">Сканирование...</string>
+    <string name="scan_label">Scan</string>
+    <string name="scan_result_label">Результат сканирования:</string>
+    <string name="title_activity_scan">Scan Activity</string>
+    <string name="title_activity_sign">Подпись</string>
+    <string name="address">Адрес</string>
+    <string name="addressee">Получатель</string>
+    <string name="geography">География</string>
+    <string name="waybill">Накладная</string>
+    <string name="phone">Телефон</string>
+    <string name="info">Информация</string>
+    <string name="comment">Комментарий</string>
+    <string name="items">Грузовые места</string>
+    <string name="accepted">Принял</string>
+    <string name="decline">Отклонить</string>
+    <string name="done">Выполнено</string>
+    <string name="execute">Выполнить</string>
+    <string name="accept">Принять</string>
+</resources>

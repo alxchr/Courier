@@ -385,7 +385,7 @@ public class Main2Activity extends AppCompatActivity {
                             Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                         } catch (SQLiteConstraintException e) {
 //                            long rowID = db.replace("deliveries", null, cv);
-                            Log.d(LOG_TAG, "Unique constraint, ID = " + result2.getInt("id") + " waybill = " + result2.getString("waybill"));
+//                            Log.d(LOG_TAG, "Unique constraint, ID = " + result2.getInt("id") + " waybill = " + result2.getString("waybill"));
                         }
                         i++;
                     }

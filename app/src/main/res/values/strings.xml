@@ -10,21 +10,20 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
+    <string name="permission_rationale" translatable="false">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="database_url">jdbc:postgresql://192.168.0.24:5432/cargo_mobile</string>
-    <string name="database_user">cargo</string>
-    <string name="database_password">cargo3</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
+    <string name="database_url" translatable="false">jdbc:postgresql://192.168.0.24:5432/cargo_mobile</string>
+    <string name="database_user" translatable="false">cargo</string>
+    <string name="database_password" translatable="false">cargo3</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="text_tab1">Подготовлено</string>
-    <string name="text_tab2">В работе</string>
-    <string name="text_tab3">Доставлено</string>
-    <string name="text_tab4">Проблемы</string>
-    <string name="text_tab"></string>
+    <string name="text_tab2">On delivery</string>
+    <string name="text_tab3">Delivered</string>
+    <string name="text_tab4">Traces</string>
+    <string name="text_tab" translatable="false"></string>
     <string-array name="urgencies">
         <item></item>
         <item>Простое письмо</item>
@@ -44,4 +43,18 @@
     <string name="scan_result_label">Last scan result: </string>
     <string name="title_activity_scan">Scan Activity</string>
     <string name="title_activity_sign">Sign</string>
+    <string name="address">Address</string>
+    <string name="addressee">Addressee</string>
+    <string name="geography">Geography</string>
+    <string name="waybill">Waybill</string>
+    <string name="phone">Phone</string>
+    <string name="info">Info</string>
+    <string name="comment">Comment</string>
+    <string name="items">Items</string>
+    <string name="accepted">Accepted</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="done">Done</string>
+    <string name="execute">Execute</string>
+    <string name="text_tab1">Prepared</string>
 </resources>

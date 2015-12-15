@@ -170,6 +170,7 @@ public class ScanActivity extends Activity {
             resumeCamera();
         }
     */
+    @Override
     public void onPause() {
         super.onPause();
         releaseCamera();
