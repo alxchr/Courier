@@ -52,7 +52,7 @@ public class Sign extends AppCompatActivity implements View.OnClickListener {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         // mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(1);
+        mPaint.setStrokeWidth(3);
         edAccepted = (EditText) findViewById(R.id.accepted);
     }
     @Override

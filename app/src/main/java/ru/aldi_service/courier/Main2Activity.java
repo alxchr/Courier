@@ -43,7 +43,9 @@ public class Main2Activity extends AppCompatActivity {
             "geography", "address", "phone", "cost_of_delivery", "addressee_payment", "additional_payment", "info",
 // urgency must be converted to int
 //            "urgency",
-            "comment", "delivery_date"};
+            "comment"};
+    // delivery_date is timestamp
+//            "comment", "delivery_date"};
     String[] columnsDeliveriesInt = {"id", "delivery_list_id", "n_items"};
     ArrayList<Waybill> prepared = new ArrayList<>();
     ArrayList<Waybill> done = new ArrayList<>();
@@ -84,7 +86,7 @@ public class Main2Activity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         int id, oldstatus, newstatus;
-
+        Waybill wb;
         String LOG_TAG = "Waybill result =";
         if (resultCode == RESULT_OK && requestCode == 1) {
             id = data.getIntExtra("id", 0);
@@ -93,22 +95,24 @@ public class Main2Activity extends AppCompatActivity {
             newstatus = data.getIntExtra("newstatus", 0);
             Log.d(LOG_TAG, resultCode + " request = " + requestCode + " id = " + id + " old = " + oldstatus + " new = " + newstatus);
             if (oldstatus == 1 && newstatus == 2) {
-                wbTransfer(id, prepared, in_work);
+                wb = wbTransfer(id, prepared, in_work);
             }
             if (oldstatus == 1 && newstatus == 4) {
-                wbTransfer(id, prepared, problems);
+                wb = wbTransfer(id, prepared, problems);
             }
             if (oldstatus == 2 && newstatus == 3) {
-                wbTransfer(id, in_work, done);
+                wb = wbTransfer(id, in_work, done);
+                wb.setDeliveryDate(System.currentTimeMillis() / 1000);
             }
             if (oldstatus == 2 && newstatus == 4) {
-                wbTransfer(id, in_work, problems);
+                wb = wbTransfer(id, in_work, problems);
             }
             if (oldstatus == 4 && newstatus == 2) {
-                wbTransfer(id, problems, in_work);
+                wb = wbTransfer(id, problems, in_work);
             }
             if (oldstatus == 4 && newstatus == 3) {
-                wbTransfer(id, problems, done);
+                wb = wbTransfer(id, problems, done);
+                wb.setDeliveryDate(System.currentTimeMillis() / 1000);
             }
             currentTag = tabHost.getCurrentTabTag();
 
@@ -152,12 +156,13 @@ public class Main2Activity extends AppCompatActivity {
         });
         setTitle(getEmployeeName());
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
         lvPrepared = new ListView(this);
         lvInWork = new ListView(this);
         lvDone = new ListView(this);
         lvProblems = new ListView(this);
 
-        tabHost.setup();
         fillTabs(getString(R.string.text_tab2));
 
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -174,6 +179,7 @@ public class Main2Activity extends AppCompatActivity {
         Log.d("delivery lists SQLite", " N = " + String.valueOf(c1.getCount()));
         if (c1 != null && c1.getCount() > 0) {
             String lists = "", w, dd, adr, adrs;
+            long ddts;
             int i = 0, s, u, id;
             if (c1.moveToFirst()) {
                 do {
@@ -186,48 +192,70 @@ public class Main2Activity extends AppCompatActivity {
 //            c2 = db.query("deliveries", null, selection, null, null, null, "urgency desc, delivery_date asc");
             // use distinct for waybills
             c2 = db.query(true, "deliveries", null, selection, null, "waybill", null, "urgency desc, delivery_date asc", null);
+//            c2 = db.query(true, "deliveries", null, selection, null, "waybill", null, "urgency desc", null);
             Log.d("deliveries", "deliveries num = " + String.valueOf(c2.getCount()));
             if (c2 != null && c2.getCount() > 0) {
                 if (c2.moveToFirst()) {
                     do {
                         adr = c2.getString(c2.getColumnIndex("address"));
                         adrs = c2.getString(c2.getColumnIndex("addressee"));
-                        dd = c2.getString(c2.getColumnIndex("delivery_date"));
+//                        dd = c2.getString(c2.getColumnIndex("delivery_date"));
+                        ddts = c2.getLong(c2.getColumnIndex("delivery_date"));
                         id = c2.getInt(c2.getColumnIndex("id"));
                         s = c2.getInt(c2.getColumnIndex("status"));
                         u = c2.getInt(c2.getColumnIndex("urgency"));
                         w = c2.getString(c2.getColumnIndex("waybill"));
-                        switch (s) {
-                            case 1:
-                                prepared.add(new Waybill(this, id, w, adrs, adr, u, dd));
-                                break;
-                            case 2:
-                                in_work.add(new Waybill(this, id, w, adrs, adr, u, dd));
-                                break;
-                            case 3:
-                                done.add(new Waybill(this, id, w, adrs, adr, u, dd));
-                                break;
-                            case 4:
-                                problems.add(new Waybill(this, id, w, adrs, adr, u, dd));
-                                break;
+                        ArrayList<Waybill> all = new ArrayList<>();
+                        all.addAll(prepared);
+                        all.addAll(problems);
+                        all.addAll(in_work);
+                        all.addAll(done);
+                        boolean in_list = false;
+                        for (Waybill w1 : all) {
+                            if (w1.getId() == id) {
+                                in_list = true;
+//                                Log.d("Found ", "id = " + id + " waybill = " + w + "status = " + s);
+                            }
                         }
+                        if (!in_list) {
+//                            Log.d("New ", "id = " + id + " waybill = " + w + "status = " + s);
+                            switch (s) {
+                                case 1:
+                                    prepared.add(new Waybill(this, id, w, adrs, adr, u, ddts));
+                                    break;
+                                case 2:
+                                    in_work.add(new Waybill(this, id, w, adrs, adr, u, ddts));
+//                                    Log.d("deliveries 2", "id = " + id + " waybill = " + w);
+                                    break;
+                                case 3:
+                                    done.add(new Waybill(this, id, w, adrs, adr, u, ddts));
+//                                    Log.d("deliveries 3", "id = " + id + " waybill = " + w);
+                                    break;
+                                case 4:
+//                                    Log.d("Traces", "was " + String.valueOf(problems.size()));
+                                    problems.add(new Waybill(this, id, w, adrs, adr, u, ddts));
+//                                    Log.d("Traces", "new " + String.valueOf(problems.size()));
+                                    break;
+                            }
+                        }
+                        all.clear();
                     } while (c2.moveToNext());
                 }
             }
         }
     }
 
-    boolean wbTransfer(int id, ArrayList<Waybill> from, ArrayList<Waybill> to) {
+    Waybill wbTransfer(int id, ArrayList<Waybill> from, ArrayList<Waybill> to) {
         int j;
         boolean inserted;
-        Waybill wdel = null;
+        Waybill wdel = null, res = null;
         for (Waybill w : from) {
             j = w.getId();
             if (j == id) {
                 inserted = false;
                 for (Waybill w1 : to) {
                     int i = to.indexOf(w1);
-                    if (w.getDeliveryDate().compareToIgnoreCase(w1.getDeliveryDate()) < 0) {
+                    if (w.getDeliveryDate() - w1.getDeliveryDate() < 0) {
                         to.add(i, w);
                         inserted = true;
                         break;
@@ -236,15 +264,16 @@ public class Main2Activity extends AppCompatActivity {
                 if (!inserted) {
                     to.add(w);
                 }
+                res = w;
                 wdel = w;
                 break;
             }
         }
         if (wdel != null) {
             from.remove(wdel);
-            return true;
+            return res;
         }
-        return false;
+        return null;
     }
 
     void fillTabs(String cTab) {
@@ -279,6 +308,8 @@ public class Main2Activity extends AppCompatActivity {
         private Connection connection;
         private String from, to;
         private Date now;
+
+        //        long ts;
         exchangeDB() {
         }
 
@@ -302,7 +333,7 @@ public class Main2Activity extends AppCompatActivity {
             try {
                 now = new Date();
                 GregorianCalendar calen = new GregorianCalendar();
-                calen.add(Calendar.DAY_OF_YEAR, -14);
+                calen.add(Calendar.DAY_OF_YEAR, -7);
                 to = format1.format(now);
                 from = format1.format(calen.getTime());
                 int i, j;
@@ -313,7 +344,8 @@ public class Main2Activity extends AppCompatActivity {
                     return false;
                 } else {
                     PreparedStatement ps;
-                    ps = connection.prepareStatement("SELECT * FROM delivery_lists WHERE employee_id= ? "
+                    ps = connection.prepareStatement("SELECT id, employee_id, user_id, list_number, extract(epoch from datetime) AS datetime"
+                                    + " FROM delivery_lists WHERE employee_id= ? "
                                     + " AND deleted=false AND datetime BETWEEN '" + from + "' AND '" + to + "' ",
                             ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                     ps.setInt(1, getEmployee());
@@ -333,19 +365,26 @@ public class Main2Activity extends AppCompatActivity {
                         delivery_lists += "'" + String.valueOf(result1.getInt("id")) + "'";
                         cv.put("user_id", result1.getInt("user_id"));
                         cv.put("list_number", result1.getString("list_number"));
-                        cv.put("datetime", result1.getString("datetime"));
+                        cv.put("datetime", result1.getLong("datetime"));
+//                        ts = result1.getLong("ts");
+//                        cv.put("datetime",ts);
                         try {
                             long rowID = db.insertOrThrow("delivery_lists", null, cv);
                             Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                         } catch (SQLiteConstraintException e) {
 //                            long rowID = db.replace("delivery_lists", null, cv);
-//                            Log.d(LOG_TAG, "row replaced, ID = " + rowID);
+//                            Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                         }
                         i++;
                     }
                     delivery_lists += ")";
                     Log.d(LOG_TAG, delivery_lists);
-                    ps = connection.prepareStatement("SELECT * FROM deliveries "
+                    ps = connection.prepareStatement("SELECT "
+                                    + " waybill, addressee, contact_person, geography, address, phone, cost_of_delivery,"
+                                    + " addressee_payment, additional_payment, info, comment,"
+                                    + " id, delivery_list_id, n_items, weight, urgency,"
+                                    + " extract(epoch from delivery_date) AS delivery_date"
+                                    + " FROM deliveries "
                                     + " WHERE delivery_list_id IN "
                                     + delivery_lists
                                     + " ORDER BY delivery_list_id",
@@ -379,6 +418,7 @@ public class Main2Activity extends AppCompatActivity {
                         }
                         cv.put("urgency", iUrgency);
                         cv.put("status", PREPARED);
+                        cv.put("delivery_date", result2.getLong("delivery_date"));
                         LOG_TAG = "Insert delivery";
                         try {
                             long rowID = db.insertOrThrow("deliveries", null, cv);

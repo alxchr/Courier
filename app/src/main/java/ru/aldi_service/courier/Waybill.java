@@ -1,7 +1,10 @@
 package ru.aldi_service.courier;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 
@@ -23,18 +26,51 @@ public class Waybill {
             act.startActivityForResult(intent, 1);
         }
     };
-    private String waybill, address, addressee, contactPerson, geography, phone, acceptedBy, info, comment, deliveryDate;
+    DBHelper dbHelper;
+    ContentValues cv;
+    private SQLiteDatabase db;
+    private Cursor c1, c2;
+    private String selection;
+    private byte[] sign = {0};
+    private String waybill, address, addressee, contactPerson, geography, phone, acceptedBy, info, comment;
     private int id, deliveryListId, nItems, urgency, status;
     private float weight, costOfDelivery, addresseePayment, additionalPayment;
+    private long ddts;
 
-    public Waybill(Activity a, int i, String wn, String addrs, String addr, int urg, String dd) {
+    public Waybill(Activity a, int i, String wn, String addrs, String addr, int urg, long dd) {
         waybill = wn;
         id = i;
         addressee = addrs;
         address = addr;
         urgency = urg;
-        deliveryDate = dd;
+        ddts = dd;
         act = a;
+        /*
+        dbHelper = new DBHelper(act);
+        db = dbHelper.getWritableDatabase();
+        selection = "id = '" + String.valueOf(id) + "'";
+        c1 = db.query("deliveries", null, selection, null, null, null, null);
+        c1.moveToFirst();
+        waybill = c1.getString(c1.getColumnIndex("waybill"));
+        addressee = c1.getString(c1.getColumnIndex("addressee"));
+        geography = c1.getString(c1.getColumnIndex("geography"));
+        address = c1.getString(c1.getColumnIndex("address"));
+        phone = c1.getString(c1.getColumnIndex("phone"));
+        info = c1.getString(c1.getColumnIndex("info"));
+        comment = c1.getString(c1.getColumnIndex("comment"));
+        costOfDelivery = c1.getFloat(c1.getColumnIndex("cost_of_delivery"));
+        addresseePayment = c1.getFloat(c1.getColumnIndex("addressee_payment"));
+        additionalPayment = c1.getFloat(c1.getColumnIndex("additional_payment"));
+        weight = c1.getFloat(c1.getColumnIndex("weight"));
+        acceptedBy = c1.getString(c1.getColumnIndex("accepted_by"));
+        contactPerson = c1.getString(c1.getColumnIndex("contact_person"));
+        ddts = c1.getLong(c1.getColumnIndex("delivery_date"));
+        status = c1.getInt(c1.getColumnIndex("status"));
+        nItems = c1.getInt(c1.getColumnIndex("n_items"));
+        urgency = c1.getInt(c1.getColumnIndex("urgency"));
+        deliveryListId = c1.getInt(c1.getColumnIndex("delivery_list_id"));
+        sign = c1.getBlob(c1.getColumnIndex("sign"));
+        */
     }
 
     void setContactPerson(String cp) {
@@ -129,11 +165,15 @@ public class Waybill {
         urgency = u;
     }
 
-    String getDeliveryDate() {
-        return deliveryDate;
+    long getDeliveryDate() {
+        return ddts;
     }
 
-    void setDeliveryDate(String dd) {
-        deliveryDate = dd;
+    void setDeliveryDate(long dd) {
+        ddts = dd;
+    }
+
+    void setWbSign(byte[] s) {
+        sign = s;
     }
 }

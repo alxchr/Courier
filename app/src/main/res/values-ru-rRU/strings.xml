@@ -53,4 +53,5 @@
     <string name="cancel">Отменить</string>
     <string name="put_sign">Пожалуйста, подпишите документ.</string>
     <string name="sign">Подписать</string>
+    <string name="signature">Подпись</string>
 </resources>

@@ -2,17 +2,27 @@ package ru.aldi_service.courier;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class WaybillActivity extends Activity {
     DBHelper dbHelper;
@@ -20,6 +30,7 @@ public class WaybillActivity extends Activity {
     RadioButton rbAccept, rbDecline, rbDone;
     Button execute;
     ContentValues cv;
+    long ddts;
     String waybill, addressee, address, cp, geo, phone, accepted, info, comment, dd;
     byte[] sign = {0};
     private int i, newstatus = 0, status, dli, nItems, urgency, id;
@@ -46,6 +57,9 @@ public class WaybillActivity extends Activity {
                     intent = new Intent();
                     intent.putExtra("id", id);
                     if (newstatus > 0 && newstatus != status) {
+                        if (newstatus == 3) {
+                            ddts = System.currentTimeMillis() / 1000L;
+                        }
                         cv = new ContentValues();
                         cv.put("id", id);
                         cv.put("delivery_list_id", dli);
@@ -64,7 +78,7 @@ public class WaybillActivity extends Activity {
                         cv.put("urgency", urgency);
                         cv.put("info", info);
                         cv.put("comment", comment);
-                        cv.put("delivery_date", dd);
+                        cv.put("delivery_date", ddts);
                         cv.put("status", newstatus);
                         if (sign.length > 1) {
                             Log.d("Sign accepted", "length = " + sign.length);
@@ -90,7 +104,6 @@ public class WaybillActivity extends Activity {
                         finish();
                     }
             }
-
         }
     };
     private Cursor c1, c2;
@@ -148,11 +161,12 @@ public class WaybillActivity extends Activity {
         accepted = c1.getString(c1.getColumnIndex("accepted_by"));
         tvAccepted.setText(accepted);
         cp = c1.getString(c1.getColumnIndex("contact_person"));
-        dd = c1.getString(c1.getColumnIndex("delivery_date"));
+        ddts = c1.getLong(c1.getColumnIndex("delivery_date"));
         status = c1.getInt(c1.getColumnIndex("status"));
         dli = c1.getInt(c1.getColumnIndex("delivery_list_id"));
         nItems = c1.getInt(c1.getColumnIndex("n_items"));
         urgency = c1.getInt(c1.getColumnIndex("urgency"));
+        sign = c1.getBlob(c1.getColumnIndex("sign"));
         selection = "delivery_id = '" + sId + "'";
         c2 = db.query("delivery_items", columns, selection, null, null, null, null);
         if (c2 != null && c2.getCount() > 0) {
@@ -178,5 +192,38 @@ public class WaybillActivity extends Activity {
         rbAccept.setOnClickListener(ocl);
         rbDone.setOnClickListener(ocl);
         rbDecline.setOnClickListener(ocl);
+        if (sign != null && sign.length > 1) {
+            LinearLayout llSign = (LinearLayout) findViewById(R.id.llSign);
+            llSign.addView(new RenderView(this));
+        }
+    }
+
+    class RenderView extends View {
+        Bitmap bitmap1;
+        Rect dst = new Rect();
+        Rect src;
+
+        public RenderView(Context context) {
+            super(context);
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+                ByteArrayInputStream is = new ByteArrayInputStream(sign);
+                bitmap1 = BitmapFactory.decodeStream(is, null, options);
+                is.close();
+                src = new Rect(0, 0, bitmap1.getWidth(), bitmap1.getHeight());
+                Log.d("Sign", "Config =" + bitmap1.getConfig() + " Size = " + bitmap1.getByteCount());
+            } catch (IOException e) {
+                Log.d("Sign", "Failed");
+            }
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            dst.set(0, 0, 300, 150);
+            canvas.drawColor(Color.LTGRAY);
+            canvas.drawBitmap(bitmap1, src, dst, null);
+        }
+
     }
 }

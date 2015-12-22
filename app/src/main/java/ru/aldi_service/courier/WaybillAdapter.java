@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +21,7 @@ public class WaybillAdapter extends BaseAdapter {
     Context c;
     LayoutInflater lInflater;
     ArrayList<Waybill> objects;
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm:ss");
     WaybillAdapter(Context context, ArrayList<Waybill> waybills) {
         c = context;
         objects = waybills;
@@ -53,7 +54,7 @@ public class WaybillAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.addressee)).setText(w.getAddressee());
         ((TextView) view.findViewById(R.id.address)).setText(w.getAddress());
         ((TextView) view.findViewById(R.id.urgency)).setText(c.getResources().getStringArray(R.array.urgencies)[w.getUrgency()] + " ");
-        ((TextView) view.findViewById(R.id.deliveryDate)).setText(w.getDeliveryDate());
+        ((TextView) view.findViewById(R.id.deliveryDate)).setText(dateFormat.format(w.getDeliveryDate() * 1000L));
         view.setId(w.getId());
         view.setOnClickListener(Waybill.ocl);
         return view;

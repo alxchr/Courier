@@ -34,7 +34,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         + "employee_id integer,"
                         + "user_id integer,"
                         + "list_number text,"
-                        + "datetime text"
+                        + "datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL"
+//                        + "datetime text"
                         + ");"
         );
         db.execSQL("create table deliveries("
@@ -56,7 +57,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         + "info text,"
                         + "urgency integer,"
                         + "comment text,"
-                        + "delivery_date text,"
+                        + "delivery_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
+//                        + "delivery_date text,"
                         + "status integer"
                         + ");"
         );
